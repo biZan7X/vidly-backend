@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const genres = require("./routes/genres");
+const customers = require("./routes/Customers");
 
 //& db connection
 mongoose
@@ -11,6 +12,7 @@ mongoose
 
 app.use(express.json());
 app.use("/api/genres", genres);
+app.use("/api/customers", customers);
 
 //& welcome
 app.get("/", (req, res) => {

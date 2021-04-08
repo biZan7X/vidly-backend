@@ -1,65 +1,70 @@
 const express = require("express");
 const router = express.Router();
-const { Genre, validate } = require("../models/genres");
+const { Customers, validate } = require("../models/customers");
 
 //* Get routes -------------------------------------------------------------------------------------
-
-//& get all the genres
+//& get all the customers
 router.get("/", async (req, res) => {
-	const genres = await Genre.find();
-	res.send(genres);
+	const customers = await Customers.find().sort({ name: 1 });
+	res.send(customers);
 });
 
-//& get a specific genre
+//& get the specific customer
 router.get("/:id", async (req, res) => {
-	// finding the genre
-	const genre = await Genre.find({ _id: req.params.id });
-	if (!genre) return res.status(404).send("the genre was not found");
+	const customer = await Customers.findById(req.params.id);
+	if (!customer) return res.status(404).send("the customer was not found");
 
-	res.send(genre);
+	res.send(customer);
 });
 
 //* post routes--------------------------------------------------------------------------------------
 router.post("/", async (req, res) => {
 	//validation
-	const { error } = genreValidation(req.body);
+	const { error } = validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
-	// creation
-	const genre = new Genre({
+	//creation
+	const customer = new Customers({
+		isGold: req.body.isGold,
 		name: req.body.name,
+		phone: req.body.phone,
 	});
 
-	// saving
-	const result = await genre.save();
+	//saving
+	const result = await customer.save();
 	res.send(result);
 });
 
 //*put route-----------------------------------------------------------------------------------------
 router.put("/:id", async (req, res) => {
 	//validation
-	const { error } = genreValidation(req.body);
+	const { error } = validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
-	// finding the genre and updating
-	const genre = await Genre.findByIdAndUpdate(
+	const customer = await Customers.findByIdAndUpdate(
 		req.params.id,
 		{
+			isGold: req.body.isGold,
 			name: req.body.name,
+			phone: req.body.phone,
 		},
 		{ new: true }
 	);
-	if (!genre) return res.status(404).send("the genre was not found");
 
-	res.send(genre);
+	if (!customer) return res.status(404).send("the customer was found");
+
+	res.send(customer);
 });
 
 //* delete route--------------------------------------------------------------------------------------
-router.delete("/:id", async (req, res) => {
-	// finding the genre
-	const genre = await Genre.findByIdAndDelete(req.params.id);
 
-	res.send(genre);
+router.delete("/:id", async (req, res) => {
+	// finding the customer
+	const customer = await Customers.findByIdAndDelete(req.params.id);
+
+	res.send(customer);
 });
+
+//* validation----------------------------------------------------------------------------------------
 
 module.exports = router;
