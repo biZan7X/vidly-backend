@@ -2,17 +2,19 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const genres = require("./routes/genres");
-const customers = require("./routes/Customers");
+const customers = require("./routes/customers");
+const movies = require("./routes/movies");
 
 //& db connection
 mongoose
-	.connect("mongodb://localhost/vidly")
+	.connect("mongodb://localhost/vidly", { useFindAndModify: false })
 	.then(() => console.log("connected to the mongodb"))
 	.catch((err) => console.error("unable to connect to the db", err));
 
 app.use(express.json());
 app.use("/api/genres", genres);
 app.use("/api/customers", customers);
+app.use("/api/movies", movies);
 
 //& welcome
 app.get("/", (req, res) => {

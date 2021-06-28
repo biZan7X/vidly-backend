@@ -17,5 +17,6 @@ const genreValidation = (genre) => {
 	return schema.validate(genre);
 };
 
+module.exports.genreSchema = genreSchema;
 module.exports.Genre = Genre;
-module.exports.validate = genreValidation;
+module.exports.validateGenre = genreValidation;

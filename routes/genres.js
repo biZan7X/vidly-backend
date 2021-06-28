@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Genre, validate } = require("../models/genres");
+const { Genre, validateGenre } = require("../models/genres");
 
 //* Get routes -------------------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ router.get("/:id", async (req, res) => {
 //* post routes--------------------------------------------------------------------------------------
 router.post("/", async (req, res) => {
 	//validation
-	const { error } = genreValidation(req.body);
+	const { error } = validateGenre(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	// creation
@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
 //*put route-----------------------------------------------------------------------------------------
 router.put("/:id", async (req, res) => {
 	//validation
-	const { error } = genreValidation(req.body);
+	const { error } = validateGenre(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	// finding the genre and updating
