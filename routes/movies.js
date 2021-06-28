@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
 			name: genre.name,
 		},
 		numberInStock: req.body.numberInStock,
-		dailyRentaleRate: req.body.dailyRentaleRate,
+		dailyRentalRate: req.body.dailyRentalRate,
 	});
 
 	const result = await movie.save();
