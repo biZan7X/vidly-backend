@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const { Rental, validateRental } = require("../models/rentals");
 const { Movie } = require("../models/movies");
+const auth = require("../middleware/auth");
 const { Customers } = require("../models/customers");
 const Fawn = require("fawn");
 
@@ -25,7 +26,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //* POST ROUTES
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
 	//& express validation : req
 	const { error } = validateRental(req.body);
 	if (error) return res.status(400).send(error.details[0].message);

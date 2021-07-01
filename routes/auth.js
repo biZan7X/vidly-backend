@@ -12,13 +12,18 @@ router.post("/", async (req, res) => {
 
 	//& checking if the email already exists
 	const userTemp = await User.findOne({ email: req.body.email });
-	if (userTemp) return res.status(400).send("invalid email or password");
+	if (!userTemp) return res.status(400).send("invalid email or password");
 
 	//& checking the passwords
-	const validPassword = await bcrypt.compare(req.body.password, user.password);
+	const validPassword = await bcrypt.compare(
+		req.body.password,
+		userTemp.password
+	);
 	if (!validPassword) return res.status(400).send("Invalid email or password");
 
-	res.send(true);
+	//& creating jwt
+	const token = userTemp.generateAuthToken();
+	res.send(token);
 });
 
 const validateAuth = (auth) => {
@@ -27,7 +32,7 @@ const validateAuth = (auth) => {
 		password: Joi.string().required().min(5).max(255),
 	});
 
-	return schema.validate(user);
+	return schema.validate(auth);
 };
 
 module.exports = router;
